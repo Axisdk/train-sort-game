@@ -10,7 +10,7 @@
     padding: 20px;
 }
 
-.kamni, .vagons {
+.kamni {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -122,8 +122,26 @@ body {
 
 
 /*TRAIN*/
-.locomotive {
+
+.train {
+    width: 100%;
+    height: 100px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    -webkit-animation: voyage 20s linear infinite;
+    animation: voyage 20s linear infinite;
+}
+
+
+.locomotive {
+    width: 300px;
+    display: flex;
+    position: relative;
 }
 
 .locomotive-main {
@@ -134,23 +152,74 @@ body {
     width: 300px;
 }
 
+.locomotive-wheels {
+    width: 100%;
+    height: 100%;
+}
+
+.locomotive-wheel {
+    width: 40px;
+    position: absolute;
+    bottom: 0;
+    animation: spin 10s linear infinite; */
+}
+
+.locomotive-wheel-1 {
+    width: 35px;
+    left: 20px;
+}
+
+.locomotive-wheel-2 {
+    width: 35px;
+    left: 50px;
+}
+
+.locomotive-wheel-3 {
+    left: 90px;
+}
+
+.locomotive-wheel-4 {
+    left: 127px;
+}
+
+.locomotive-wheel-5 {
+    left: 168px;
+}
+
+.locomotive-wheel-6 {
+    left: 203px;
+}
+
+.locomotive-wheel-7 {
+    width: 30px;
+    left: 230px;
+}
+
+.locomotive-wheel img {
+    width: 100%;
+}
+
 .wagon {
     width: 230px;
+    height: 175px;
+    position: relative;
+    z-index: 10;
+}
+
+.wagon-text {
+    width: 100%;
+    position: absolute;
+    bottom: 40%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    text-align: center;
 }
 
 .wagon img {
     width: 300px;
-}
-
-.train {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    -webkit-animation: voyage 20s linear infinite;
-    animation: voyage 20s linear infinite;
 }
 
 
