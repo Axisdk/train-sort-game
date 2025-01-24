@@ -10,31 +10,47 @@ kamniEls.forEach((kamenEl) => {
         offsetX = event.clientX - kamenEl.offsetLeft;
         offsetY = event.clientY - kamenEl.offsetTop;
         kamenEl.style.cursor = "grabbing";
-    });
 
-    document.addEventListener("mousemove", (event) => {
-        if (isDragging) {
-            kamenEl.style.left = `${event.clientX - offsetX}px`;
-            kamenEl.style.top = `${event.clientY - offsetY}px`;
-        }
-    });
-
-    document.addEventListener("mouseup", (event) => {
-        isDragging = false;
-        kamenEl.style.cursor = "grab";
-
-        // скрываем камень, чтобы получить элемент сзади
-        kamenEl.style.visibility = "hidden";
-        const elementBehind = document.elementFromPoint(event.clientX, event.clientY);
-        // показываем камень
-        kamenEl.style.visibility = "visible";
-
-        if (elementBehind) {
-            // если это вагон
-            if (elementBehind.classList.contains("wagon")) {
-                console.log(kamenEl.textContent, '->', elementBehind.textContent)
-                kamenEl.classList.add('kamen-hidden')
+        const onMouseMove = (event) => {
+            if (isDragging) {
+                kamenEl.style.left = `${event.clientX - offsetX}px`;
+                kamenEl.style.top = `${event.clientY - offsetY}px`;
             }
-        }
+        };
+
+        const onMouseUp = (event) => {
+            isDragging = false;
+            kamenEl.style.cursor = "grab";
+
+            kamenEl.style.visibility = "hidden";
+            requestAnimationFrame(() => {
+                const elementBehind = document.elementFromPoint(event.clientX, event.clientY);
+                kamenEl.style.visibility = "visible";
+
+                if (elementBehind && elementBehind.classList.contains("wagon")
+                    && elementBehind.dataset.sort === kamenEl.dataset.sort) {
+                    console.log(kamenEl.textContent, '->', elementBehind.textContent);
+                    kamenEl.classList.add('kamen-hidden');
+                }
+
+                document.removeEventListener("mousemove", onMouseMove);
+                document.removeEventListener("mouseup", onMouseUp);
+            });
+        };
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const wagonsEls = document.querySelectorAll('.wagon');
+
+    wagonsEls.forEach(wagonEl => {
+        wagonEl.addEventListener('click', () => {
+            console.log(wagonEl);
+        })
+    })
+
+})

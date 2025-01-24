@@ -261,9 +261,7 @@ body {
 }
 
 .wagon img {
-    position: relative;
     width: 300px;
-    z-index: -1;
 }
 
 
