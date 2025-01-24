@@ -39,3 +39,15 @@ kamniEls.forEach((kamenEl) => {
         }
     });
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const wagonsEls = document.querySelectorAll('.wagon');
+
+    wagonsEls.forEach(wagonEl => {
+        wagonEl.addEventListener('click', () => {
+            console.log(wagonEl);
+        })
+    })
+
+})
