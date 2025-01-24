@@ -1,4 +1,10 @@
-document.querySelectorAll(".kamen").forEach((kamenEl) => {
+function addScoreValue(value) {
+    const scoreEl = document.querySelector('#score-value');
+    const currentScore = Number(scoreEl.textContent) || 0;
+    scoreEl.textContent = (currentScore + value);
+}
+
+document.querySelectorAll(".stone").forEach((kamenEl) => {
     let offsetX, offsetY, isDragging = false;
 
     kamenEl.style.position = "absolute";
@@ -28,6 +34,7 @@ document.querySelectorAll(".kamen").forEach((kamenEl) => {
 
             if (elementBehind && elementBehind.classList.contains("wagon")
                 && elementBehind.dataset.sort === kamenEl.dataset.sort) {
+                addScoreValue(10);
                 kamenEl.remove();
                 console.log(kamenEl.textContent, "->", elementBehind.textContent);
             }
@@ -45,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".wagon").forEach((wagonEl) => {
         wagonEl.addEventListener("click", () => {
             console.log(wagonEl);
+            kamenEl.remove()
         });
     });
 });
