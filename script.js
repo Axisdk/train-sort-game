@@ -1,58 +1,160 @@
-function addScoreValue(value) {
-    const scoreEl = document.querySelector('#score-value');
-    const currentScore = Number(scoreEl.textContent) || 0;
-    scoreEl.textContent = (currentScore + value);
+const glossary = [
+    { stone: 'хуй', wagon: 'за щеку' },
+    { stone: 'много', wagon: 'не пизди' },
+    { stone: 'ибо', wagon: 'нехуй' },
+    { stone: 'елочка', wagon: 'гори' },
+]
+
+// проверяем относится ли камень к вагону
+function checkIntoGlossary(stoneValue, wagonValue) {
+    return !!glossary.find((item) =>
+        item.stone === stoneValue && item.wagon === wagonValue
+    )
 }
 
-document.querySelectorAll(".stone").forEach((kamenEl) => {
-    let offsetX, offsetY, isDragging = false;
+// проверяем остались ли камни
+function checkCountStones() {
+    const stones = document.querySelectorAll('.stone')
+    const score = document.querySelector('.score-value').textContent
+    if (!stones.length) {
+        // здесь просто покажи модалку с результатом (score)
+        // и кнопку для перезапуска игры (location.reload())
+    }
+}
 
-    kamenEl.style.position = "absolute";
-    kamenEl.style.left = `${kamenEl.offsetLeft}px`;
-    kamenEl.style.top = `${kamenEl.offsetTop}px`;
+// прибавляем счет
+function incrementScore() {
+    document.querySelector('.score-value').textContent++
+}
 
-    kamenEl.addEventListener("mousedown", (event) => {
-        isDragging = true;
-        offsetX = event.clientX - kamenEl.offsetLeft;
-        offsetY = event.clientY - kamenEl.offsetTop;
-        kamenEl.style.cursor = "grabbing";
+// рисуем камни
+function drawStones() {
+    const wrapper = document.querySelector('.stones-wrapper')
+    wrapper.innerHTML = glossary.map((item) => {
+        return `
+            <div class="stone" data-stone="${item.stone}">
+                <span class="stone-text">${item.stone}</span>
+            </div>
+        `
+    })
+}
 
-        const onMouseMove = (event) => {
+// рисуем вагоны и локомотив
+function drawWagons() {
+    const wrapper = document.querySelector('.train')
+    // вагоны
+    wrapper.innerHTML = glossary.map((item) => {
+        return `
+            <div class="wagon" data-wagon="${item.wagon}">
+                <p class="wagon-text">${item.wagon}</p>
+                <img src="./images/wagon.png" alt="wagon">
+                <div class="wagon-wheels">
+                    <div class="wagon-wheel wagon-wheel-1">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                    <div class="wagon-wheel wagon-wheel-2">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                    <div class="wagon-wheel wagon-wheel-3">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                    <div class="wagon-wheel wagon-wheel-4">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                </div>
+            </div>
+        `
+    })
+
+    // локомотив
+    wrapper.innerHTML += `
+        <div class="locomotive">
+                <div class="locomotive-main">
+                    <img src="./images/train.png" alt="train">
+                </div>
+                <div class="locomotive-wheels">
+                    <div class="locomotive-wheel locomotive-wheel-1">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                    <div class="locomotive-wheel locomotive-wheel-2">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                    <div class="locomotive-wheel locomotive-wheel-3">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                    <div class="locomotive-wheel locomotive-wheel-4">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                    <div class="locomotive-wheel locomotive-wheel-5">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                    <div class="locomotive-wheel locomotive-wheel-6">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                    <div class="locomotive-wheel locomotive-wheel-7">
+                        <img src="./images/wheel.png" alt="wheel">
+                    </div>
+                </div>
+            </div>
+    `
+}
+
+// логика игры, слушаем разные события (drag and drop и пр.)
+function listenGame() {
+    const stones = document.querySelectorAll(".stone");
+
+    stones.forEach((stone) => {
+        // флажки
+        let offsetX, offsetY, isDragging = false;
+
+        stone.style.position = "absolute";
+
+        // при нажатии
+        stone.addEventListener("mousedown", (event) => {
+            isDragging = true;
+            offsetX = event.clientX - stone.offsetLeft;
+            offsetY = event.clientY - stone.offsetTop;
+            stone.style.cursor = "grabbing";
+        });
+
+        // при перетаскивании
+        document.addEventListener("mousemove", (event) => {
             if (isDragging) {
-                kamenEl.style.left = `${event.clientX - offsetX}px`;
-                kamenEl.style.top = `${event.clientY - offsetY}px`;
+                stone.style.left = `${event.clientX - offsetX}px`;
+                stone.style.top = `${event.clientY - offsetY}px`;
             }
-        };
+        });
 
-        const onMouseUp = (event) => {
+        // при отпускании
+        document.addEventListener("mouseup", (event) => {
             isDragging = false;
-            kamenEl.style.cursor = "grab";
+            stone.style.cursor = "grab";
 
-            kamenEl.style.visibility = "hidden";
+            // скрываем камень, чтобы получить элемент сзади
+            stone.style.visibility = "hidden";
             const elementBehind = document.elementFromPoint(event.clientX, event.clientY);
-            kamenEl.style.visibility = "visible";
+            // показываем камень
+            stone.style.visibility = "visible";
 
-            if (elementBehind && elementBehind.classList.contains("wagon")
-                && elementBehind.dataset.sort === kamenEl.dataset.sort) {
-                addScoreValue(10);
-                kamenEl.remove();
-                console.log(kamenEl.textContent, "->", elementBehind.textContent);
+            if (elementBehind) {
+                // если это вагон
+                if (elementBehind.classList.contains("wagon")) {
+                    const stoneValue = stone.getAttribute('data-stone');
+                    const wagonValue = elementBehind.getAttribute('data-wagon');
+                    if (checkIntoGlossary(stoneValue, wagonValue)) {
+                        incrementScore()
+                    }
+                    stone.remove()
+                    checkCountStones()
+                }
             }
-
-            document.removeEventListener("mousemove", onMouseMove);
-            document.removeEventListener("mouseup", onMouseUp);
-        };
-
-        document.addEventListener("mousemove", onMouseMove);
-        document.addEventListener("mouseup", onMouseUp);
-    });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".wagon").forEach((wagonEl) => {
-        wagonEl.addEventListener("click", () => {
-            console.log(wagonEl);
-            kamenEl.remove()
         });
     });
-});
+
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    drawStones()
+    drawWagons()
+    listenGame()
+})

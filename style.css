@@ -253,6 +253,7 @@ body {
     height: 175px;
     position: relative;
     z-index: 10;
+    background: red;
 }
 
 .wagon-wheels {
