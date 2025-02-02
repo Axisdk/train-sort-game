@@ -42,6 +42,12 @@ function checkCountStones() {
     const stones = document.querySelectorAll('.stone')
     const score = document.querySelector('.score-value').textContent
     if (!stones.length) {
+        const modal = document.querySelector('.modal');
+        modal.classList.add('active');
+        const btn = document.querySelector('.btn-reload');
+        btn.addEventListener('click', () => {
+            location.reload()
+        })
         // здесь просто покажи модалку с результатом (score)
         // и кнопку для перезапуска игры (location.reload())
     }
@@ -170,8 +176,6 @@ function listenGame(token) {
                         incrementScore()
                     }
                     stone.remove()
-                    elementBehind.querySelector('.wagon-img').style.filter = "grayscale(80%)"
-                    elementBehind.querySelector('.wagon-text').style.display = "none"
                     checkCountStones()
                 }
             }
