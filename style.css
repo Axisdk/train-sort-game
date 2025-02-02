@@ -24,7 +24,6 @@
 
 .stone {
     position: relative;
-    width: 120px;
     padding: 20px 25px;
     background: #eae6ed;
     box-shadow: inset -28px -22px 36px #778, inset 38px 18px 36px #fffffc, 12px 8px 18px hsla(0,0%,0%,0.25);
@@ -182,13 +181,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 7px;
-    -webkit-animation: voyage 20s linear infinite;
-    animation: voyage 20s linear infinite;
+    -webkit-animation: voyage 50s linear infinite;
+    animation: voyage 50s linear infinite;
 }
 
 .locomotive {
-    width: 300px;
     display: flex;
     position: relative;
 }
@@ -198,7 +195,7 @@ body {
 }
 
 .locomotive-main img {
-    width: 300px;
+    width: 280px;
 }
 
 .locomotive-wheels {
@@ -215,20 +212,20 @@ body {
 
 .locomotive-wheel-1 {
     width: 35px;
-    left: 20px;
+    left: 7px;
 }
 
 .locomotive-wheel-2 {
     width: 35px;
-    left: 50px;
+    left: 40px;
 }
 
 .locomotive-wheel-3 {
-    left: 90px;
+    left: 88px;
 }
 
 .locomotive-wheel-4 {
-    left: 127px;
+    left: 123px;
 }
 
 .locomotive-wheel-5 {
@@ -249,7 +246,6 @@ body {
 }
 
 .wagon {
-    width: 230px;
     height: 175px;
     position: relative;
     z-index: 10;
@@ -273,19 +269,19 @@ body {
 }
 
 .wagon-wheel-1 {
-    left: 35px;
+    left: 3px;
 }
 
 .wagon-wheel-2 {
-    left: 63px;
+    left: 35px;
 }
 
 .wagon-wheel-3 {
-    right: -11px;
+    right: 3px;
 }
 
 .wagon-wheel-4 {
-    right: -40px;
+    right: 35px;
 }
 
 .wagon-wheel img {
@@ -293,20 +289,21 @@ body {
 }
 
 .wagon-text {
-    width: 100%;
+    width: 80%;
     position: absolute;
-    bottom: 40%;
-    left: 65%;
+    bottom: 30%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     color: white;
     text-align: center;
 }
 
-.wagon img {
+.wagon-img {
+    margin-top: 16px;
     position: relative;
-    width: 300px;
+    width: 250px;
     z-index: -1;
 }
 
@@ -389,10 +386,10 @@ body {
 
 @keyframes voyage {
     0% {
-        left: -80%;
+        left: -260%;
     }
     100% {
-        left: 80%;
+        left: 260%;
     }
 }
 
