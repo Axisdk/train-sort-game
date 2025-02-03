@@ -158,56 +158,90 @@ function listenGame(token) {
     const stones = document.querySelectorAll(".stone");
 
     stones.forEach((stone) => {
-        // флажки
         let offsetX, offsetY, isDragging = false;
 
         stone.style.position = "absolute";
 
-        // при перетаскивании
-        document.addEventListener("mousemove", (event) => {
+        function moveAt(x, y) {
+            stone.style.left = `${x - offsetX}px`;
+            stone.style.top = `${y - offsetY}px`;
+        }
+
+        function startDrag(x, y) {
+            isDragging = true;
+            offsetX = x - stone.offsetLeft;
+            offsetY = y - stone.offsetTop;
+            stone.style.cursor = "grabbing";
+        }
+
+        function endDrag(clientX, clientY) {
+            if (!isDragging) return;
+            isDragging = false;
+            stone.style.cursor = "grab";
+
+            // Скрываем камень, чтобы определить, что под ним
+            stone.style.visibility = "hidden";
+            const elementBehind = document.elementFromPoint(clientX, clientY);
+            stone.style.visibility = "visible";
+
+            if (elementBehind) {
+                const classesToCheck = ["wagon", "wagon-text", "wagon-wheels", "wagon-img"];
+                if (classesToCheck.some(cls => elementBehind.classList.contains(cls))) {
+                    const stoneValue = stone.getAttribute('data-stone');
+                    const wagonValue = elementBehind.getAttribute('data-wagon');
+
+                    if (checkIntoGlossary(stoneValue, wagonValue)) {
+                        incrementScore();
+                    }
+
+                    stone.remove(); // Удаляем только тот камень, который переместили
+                    checkCountStones();
+                }
+            }
+        }
+
+        function onMouseMove(event) {
+            if (isDragging) moveAt(event.clientX, event.clientY);
+        }
+
+        function onMouseUp(event) {
+            endDrag(event.clientX, event.clientY);
+            document.removeEventListener("mousemove", onMouseMove);
+            document.removeEventListener("mouseup", onMouseUp);
+        }
+
+        function onTouchMove(event) {
             if (isDragging) {
-                stone.style.left = `${event.clientX - offsetX}px`;
-                stone.style.top = `${event.clientY - offsetY}px`;
+                event.preventDefault();
+                moveAt(event.touches[0].clientX, event.touches[0].clientY);
+            }
+        }
+
+        function onTouchEnd(event) {
+            if (event.changedTouches.length > 0) {
+                const touch = event.changedTouches[0]; // Последний отпущенный палец
+                endDrag(touch.clientX, touch.clientY);
+            }
+            document.removeEventListener("touchmove", onTouchMove);
+            document.removeEventListener("touchend", onTouchEnd);
+        }
+
+        // Обработчики для мыши
+        stone.addEventListener("mousedown", (event) => {
+            startDrag(event.clientX, event.clientY);
+            document.addEventListener("mousemove", onMouseMove);
+            document.addEventListener("mouseup", onMouseUp);
+        });
+
+        // Обработчики для сенсорных устройств
+        stone.addEventListener("touchstart", (event) => {
+            if (event.touches.length > 0) {
+                startDrag(event.touches[0].clientX, event.touches[0].clientY);
+                document.addEventListener("touchmove", onTouchMove, { passive: false });
+                document.addEventListener("touchend", onTouchEnd);
             }
         });
-
-        // при нажатии
-        stone.addEventListener("mousedown", (event) => {
-            isDragging = true;
-            offsetX = event.clientX - stone.offsetLeft;
-            offsetY = event.clientY - stone.offsetTop;
-            stone.style.cursor = "grabbing";
-
-            // при отпускании
-            document.addEventListener("mouseup", (event) => {
-                isDragging = false;
-                stone.style.cursor = "grab";
-
-                // скрываем камень, чтобы получить элемент сзади
-                stone.style.visibility = "hidden";
-                const elementBehind = document.elementFromPoint(event.clientX, event.clientY);
-                // показываем камень
-                stone.style.visibility = "visible";
-
-                if (elementBehind) {
-                    // если это вагон
-                    const classesToCheck = ["wagon", "wagon-text", "wagon-wheels", "wagon-img"];
-                    if (classesToCheck.some(cls => elementBehind.classList.contains(cls))) {
-                        const stoneValue = stone.getAttribute('data-stone');
-                        const wagonValue = elementBehind.getAttribute('data-wagon');
-
-                        if (checkIntoGlossary(stoneValue, wagonValue)) {
-                            incrementScore();
-                        }
-
-                        stone.remove();
-                        checkCountStones();
-                    }
-                }
-            });
-        });
     });
-
 }
 
 document.addEventListener('DOMContentLoaded', () => {

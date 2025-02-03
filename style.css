@@ -26,6 +26,14 @@
     position: relative;
 }
 
+@media screen and (max-width: 700px) {
+    .stones-wrapper {
+        margin-top: 50px;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
 .stone {
     position: relative;
     padding: 20px 25px;
@@ -141,6 +149,13 @@ body {
     align-items: center;
     -webkit-animation: voyage 50s linear infinite;
     animation: voyage 50s linear infinite;
+}
+
+@media screen and (max-width: 700px) {
+
+    .train {
+        animation: voyage-small 150s linear infinite;
+    }
 }
 
 .locomotive {
@@ -387,21 +402,21 @@ body {
     }
 }
 
-@-webkit-keyframes voyage {
-    0% {
-        left: -100%;
-    }
-    100% {
-        left: 100%;
-    }
-}
-
-@keyframes voyage {
+@keyframes voyage-large {
     0% {
         left: -260%;
     }
     100% {
         left: 260%;
+    }
+}
+
+@keyframes voyage-small {
+    0% {
+        left: -1500%;
+    }
+    100% {
+        left: 1500%;
     }
 }
 
