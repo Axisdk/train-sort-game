@@ -13,6 +13,47 @@
     font-style: normal;
 }
 
+.menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100px;
+}
+.menu-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.menu-item {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #205c6b;
+    border-radius: 0 0 100px 100px;
+}
+.menu-link {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    text-transform: uppercase;
+}
+.score {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    font-size: 18px;
+    color: white;
+}
+.score-value {
+    font-weight: 500;
+}
+
 .stones {
     display: flex;
     justify-content: space-around;
@@ -72,58 +113,9 @@ body,
 }
 
 body {
-    background-color: #cce6fd;
+    background: url('./images/phon.jpg') center center/cover no-repeat;
     overflow: hidden;
     animation: dayTime 40s linear infinite;
-}
-
-/*CLOUDS*/
-
-.sky {
-    position: relative;
-}
-
-.cloud {
-    margin: 5% 0 0 100%;
-    position: relative;
-}
-
-.cloud:before,
-.cloud:after {
-    position: absolute;
-    content: '';
-}
-
-.cloud,
-.cloud:before,
-.cloud:after {
-    background: #fff;
-    border-radius: 50%;
-    border: 25px solid #fff;
-    width: 0.5%;
-    overflow: visible;
-}
-
-.cloud:before {
-    top: -35px;
-    right: -60px;
-    border-width: 30px;
-}
-
-.cloud:after {
-    bottom: -25px;
-    right: -95px;
-    border-width: 28px;
-}
-
-.sky .cloud:nth-child(1) {
-    -webkit-animation: wind 80s infinite;
-    animation: wind 80s infinite;
-}
-
-.sky .cloud:nth-child(2) {
-    -webkit-animation: wind 150s infinite;
-    animation: wind 150s infinite;
 }
 
 .stage:after {
@@ -147,8 +139,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    -webkit-animation: voyage 50s linear infinite;
-    animation: voyage 50s linear infinite;
+    -webkit-animation: voyage-large 50s linear infinite;
+    animation: voyage-large 50s linear infinite;
+}
+
+@media screen and (max-width: 1000px) {
+
+    .train {
+        animation: voyage-medium 100s linear infinite;
+    }
 }
 
 @media screen and (max-width: 700px) {
@@ -408,6 +407,15 @@ body {
     }
     100% {
         left: 260%;
+    }
+}
+
+@keyframes voyage-medium {
+    0% {
+        left: -750%;
+    }
+    100% {
+        left: 750%;
     }
 }
 
