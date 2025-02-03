@@ -60,42 +60,65 @@ function incrementScore() {
 
 // рисуем камни
 function drawStones() {
-    const wrapper = document.querySelector('.stones-wrapper')
-    wrapper.innerHTML = glossary.map((item) => {
-        return `
-            <div class="stone" data-stone="${item.stone}">
-                <span class="stone-text">${item.stone}</span>
-            </div>
-        `
-    })
+    const wrapper = document.querySelector('.stones-wrapper');
+    wrapper.innerHTML = ''; // Очистка перед добавлением элементов
+
+    glossary.forEach((item) => {
+        const stoneDiv = document.createElement('div');
+        stoneDiv.classList.add('stone');
+        stoneDiv.setAttribute('data-stone', item.stone);
+
+        const stoneText = document.createElement('span');
+        stoneText.classList.add('stone-text');
+        stoneText.textContent = item.stone;
+
+        stoneDiv.appendChild(stoneText);
+        wrapper.appendChild(stoneDiv);
+    });
 }
+
 
 // рисуем вагоны и локомотив
 function drawWagons() {
-    const wrapper = document.querySelector('.train')
-    // вагоны
-    wrapper.innerHTML = glossary.map((item) => {
-        return `
-            <div class="wagon" data-wagon="${item.wagon}">
-                <p class="wagon-text">${item.wagon}</p>
-                <img class="wagon-img" src="./images/wagon.png" alt="wagon">
-                <div class="wagon-wheels">
-                    <div class="wagon-wheel wagon-wheel-1">
-                        <img src="./images/wheel.png" alt="wheel">
-                    </div>
-                    <div class="wagon-wheel wagon-wheel-2">
-                        <img src="./images/wheel.png" alt="wheel">
-                    </div>
-                    <div class="wagon-wheel wagon-wheel-3">
-                        <img src="./images/wheel.png" alt="wheel">
-                    </div>
-                    <div class="wagon-wheel wagon-wheel-4">
-                        <img src="./images/wheel.png" alt="wheel">
-                    </div>
-                </div>
-            </div>
-        `
-    })
+    const wrapper = document.querySelector('.train');
+    wrapper.innerHTML = ''; // Очистка перед добавлением элементов
+
+    // Вагоны
+    glossary.forEach((item) => {
+        const wagonDiv = document.createElement('div');
+        wagonDiv.classList.add('wagon');
+        wagonDiv.setAttribute('data-wagon', item.wagon);
+
+        const wagonText = document.createElement('p');
+        wagonText.classList.add('wagon-text');
+        wagonText.textContent = item.wagon;
+
+        const wagonImg = document.createElement('img');
+        wagonImg.classList.add('wagon-img');
+        wagonImg.src = './images/wagon.png';
+        wagonImg.alt = 'wagon';
+
+        const wagonWheelsDiv = document.createElement('div');
+        wagonWheelsDiv.classList.add('wagon-wheels');
+
+        for (let i = 1; i <= 4; i++) {
+            const wagonWheelDiv = document.createElement('div');
+            wagonWheelDiv.classList.add('wagon-wheel', `wagon-wheel-${i}`);
+
+            const wheelImg = document.createElement('img');
+            wheelImg.src = './images/wheel.png';
+            wheelImg.alt = 'wheel';
+
+            wagonWheelDiv.appendChild(wheelImg);
+            wagonWheelsDiv.appendChild(wagonWheelDiv);
+        }
+
+        wagonDiv.appendChild(wagonText);
+        wagonDiv.appendChild(wagonImg);
+        wagonDiv.appendChild(wagonWheelsDiv);
+
+        wrapper.appendChild(wagonDiv);
+    });
 
     // локомотив
     wrapper.innerHTML += `
@@ -140,14 +163,6 @@ function listenGame(token) {
 
         stone.style.position = "absolute";
 
-        // при нажатии
-        stone.addEventListener("mousedown", (event) => {
-            isDragging = true;
-            offsetX = event.clientX - stone.offsetLeft;
-            offsetY = event.clientY - stone.offsetTop;
-            stone.style.cursor = "grabbing";
-        });
-
         // при перетаскивании
         document.addEventListener("mousemove", (event) => {
             if (isDragging) {
@@ -156,29 +171,40 @@ function listenGame(token) {
             }
         });
 
-        // при отпускании
-        document.addEventListener("mouseup", (event) => {
-            isDragging = false;
-            stone.style.cursor = "grab";
+        // при нажатии
+        stone.addEventListener("mousedown", (event) => {
+            isDragging = true;
+            offsetX = event.clientX - stone.offsetLeft;
+            offsetY = event.clientY - stone.offsetTop;
+            stone.style.cursor = "grabbing";
 
-            // скрываем камень, чтобы получить элемент сзади
-            stone.style.visibility = "hidden";
-            const elementBehind = document.elementFromPoint(event.clientX, event.clientY);
-            // показываем камень
-            stone.style.visibility = "visible";
+            // при отпускании
+            document.addEventListener("mouseup", (event) => {
+                isDragging = false;
+                stone.style.cursor = "grab";
 
-            if (elementBehind) {
-                // если это вагон
-                if (elementBehind.classList.contains("wagon", "wagon-text", "wagon-wheels", "wagon-img")) {
-                    const stoneValue = stone.getAttribute('data-stone')
-                    const wagonValue = elementBehind.getAttribute('data-wagon')
-                    if (checkIntoGlossary(stoneValue, wagonValue)) {
-                        incrementScore()
+                // скрываем камень, чтобы получить элемент сзади
+                stone.style.visibility = "hidden";
+                const elementBehind = document.elementFromPoint(event.clientX, event.clientY);
+                // показываем камень
+                stone.style.visibility = "visible";
+
+                if (elementBehind) {
+                    // если это вагон
+                    const classesToCheck = ["wagon", "wagon-text", "wagon-wheels", "wagon-img"];
+                    if (classesToCheck.some(cls => elementBehind.classList.contains(cls))) {
+                        const stoneValue = stone.getAttribute('data-stone');
+                        const wagonValue = elementBehind.getAttribute('data-wagon');
+
+                        if (checkIntoGlossary(stoneValue, wagonValue)) {
+                            incrementScore();
+                        }
+
+                        stone.remove();
+                        checkCountStones();
                     }
-                    stone.remove()
-                    checkCountStones()
                 }
-            }
+            });
         });
     });
 

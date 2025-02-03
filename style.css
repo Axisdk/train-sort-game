@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -7,6 +9,8 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    font-family: "Roboto", serif;
+    font-style: normal;
 }
 
 .stones {
@@ -216,26 +220,26 @@ body {
 }
 
 .wagon-wheel {
-    width: 40px;
+    width: 45px;
     position: absolute;
     bottom: 0;
     animation: spin 10s linear infinite;
 }
 
 .wagon-wheel-1 {
-    left: 3px;
+    left: 8px;
 }
 
 .wagon-wheel-2 {
-    left: 35px;
+    left: 42px;
 }
 
 .wagon-wheel-3 {
-    right: 3px;
+    right: 8px;
 }
 
 .wagon-wheel-4 {
-    right: 35px;
+    right: 42px;
 }
 
 .wagon-wheel img {
@@ -243,9 +247,9 @@ body {
 }
 
 .wagon-text {
-    width: 80%;
+    width: 70%;
     position: absolute;
-    bottom: 30%;
+    top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 12px;
@@ -255,9 +259,9 @@ body {
 }
 
 .wagon-img {
-    margin-top: 16px;
+    margin-top: -25px;
     position: relative;
-    width: 250px;
+    width: 350px;
     z-index: -1;
 }
 
